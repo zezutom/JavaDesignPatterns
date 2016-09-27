@@ -1,11 +1,13 @@
 package org.zezutom.javadp.creational;
 
+import java.io.Serializable;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
- * Initialization-on-demand holder idiom, thread-safe and resistant to reflection.
+ * Initialization-on-demand holder idiom and is thread-safe, resistant to reflection
+ * and serializable.
  */
-public class Singleton {
+public class Singleton implements Serializable {
 
     private static final AtomicBoolean instanceExists = new AtomicBoolean(false);
 
@@ -21,6 +23,11 @@ public class Singleton {
             }
             instanceExists.set(true);
         }
+    }
+
+    // Prevents spinning up a new instance upon deserialization
+    Object readResolve() {
+        return getInstance();
     }
 
     private static class InstanceHolder {

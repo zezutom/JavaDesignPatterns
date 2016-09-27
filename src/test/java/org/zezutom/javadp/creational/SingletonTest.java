@@ -2,6 +2,7 @@ package org.zezutom.javadp.creational;
 
 import org.junit.Test;
 
+import java.io.*;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -49,6 +50,22 @@ public class SingletonTest {
         Constructor<Singleton> constructor = Singleton.class.getDeclaredConstructor();
         constructor.setAccessible(true);
         constructor.newInstance();  // This should fail, there is an instance already
-        fail("It shouldn't be possible to invoke a constructor!");
+        fail("It shouldn't be possible to create yet another instance!");
     }
+
+    @Test
+    public void isSerializableAsSingleton() throws IOException, ClassNotFoundException {
+        Singleton serializedInstance = Singleton.getInstance();
+
+        try (ObjectOutput objectOutput = new ObjectOutputStream(new FileOutputStream("serializedInstance.ser"));
+             ObjectInput objectInput = new ObjectInputStream(new FileInputStream("serializedInstance.ser"))) {
+            objectOutput.writeObject(serializedInstance);
+            Singleton deserializedInstance = (Singleton) objectInput.readObject();
+
+            // If it's the same object then the hashcode must be the same as well
+            assertTrue("No new instance should be created upon deserialization!",
+                    serializedInstance.hashCode() == deserializedInstance.hashCode());
+        }
+    }
+
 }
