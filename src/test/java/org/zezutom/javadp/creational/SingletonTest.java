@@ -1,17 +1,16 @@
 package org.zezutom.javadp.creational;
 
 import org.junit.Test;
+import org.zezutom.javadp.TestUtil;
 
 import java.io.*;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.concurrent.*;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 public class SingletonTest {
 
@@ -30,17 +29,8 @@ public class SingletonTest {
     }
 
     @Test
-    public void threadSafe() throws InterruptedException, ExecutionException {
-        final int threadCount = 100;
-        Callable<Singleton> task = Singleton::getInstance;
-        List<Callable<Singleton>> tasks = Collections.nCopies(threadCount, task);
-        ExecutorService executorService = Executors.newFixedThreadPool(threadCount);
-        List<Future<Singleton>> futures = executorService.invokeAll(tasks);
-
-        final Singleton instance = Singleton.getInstance();
-        for (Future<Singleton> future : futures) {
-            assertEquals(instance, future.get());
-        }
+    public void threadSafe() {
+        TestUtil.testThreadSafety(Singleton::getInstance);
     }
     
     @Test(expected = InvocationTargetException.class)
