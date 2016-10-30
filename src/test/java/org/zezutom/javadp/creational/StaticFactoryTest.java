@@ -6,7 +6,7 @@ import org.zezutom.javadp.TestUtil;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
-public class ServiceFactoryTest {
+public class StaticFactoryTest {
 
     @Test
     public void neverReturnsNull() {
